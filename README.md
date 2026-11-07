@@ -5,7 +5,9 @@ your grades so far and a goal GPA, and it shows the score you
 need on your next exam.
 
 ## How to use
-Open `index.html` in a browser. Nothing to install.
+**Use it online:** https://waleid23.github.io/grade-calculator/
+
+Or open `index.html` in a browser. Nothing to install.
 Click **Fill sample grades** to try it.
 
 - Add a row for every homework and quiz that's been assigned and
