@@ -14,21 +14,26 @@
 - Updated `PLAN.md` with who owns what: Waleid has the input side, Zakariya
   has the math and results side.
 - Updated `CLAUDE.md` to point to `REQUIREMENTS.md` and `PLAN.md`.
-- Built the working grade calculator (branch `calculator-app`):
-  - Input side (`index.html`, `script.js`, `style.css`): homework
-    rows with days-late and Missing, quiz rows, midterm and
-    participation status pickers, goal GPA picker (default 3.8),
-    next-exam toggle. Results update as you type and are saved in
-    the browser.
-  - Math and results side, in separate files for Zakariya:
-    `math.js` (grading scale, 10% late penalty, lowest-quiz drop,
-    missing = 0, weighted average, score needed) and `results.js`
-    (results panel).
-  - Added `math.test.js` (19 tests: `node math.test.js`) and
-    checked the page in headless Chrome with sample grades.
+- Built the working grade calculator, merged to `main` in PR #2.
+- Input side (Waleid, per `PLAN.md`): `index.html`, `script.js`,
+  `style.css`. Homework rows with days-late and Missing, quiz rows,
+  midterm and participation status pickers, goal GPA picker
+  (default 3.8), next-exam toggle. Results update as you type and
+  are saved in the browser.
+- Math and results side (Zakariya's, per `PLAN.md`): Waleid drafted
+  a working first version so the calculator could be tested end to
+  end, kept in its own files for Zakariya to review and change:
+  `math.js` (grading scale, 10% late penalty, lowest-quiz drop,
+  missing = 0, weighted average, score needed) and `results.js`
+  (results panel).
+- The data passed from the input side to the math side is
+  documented at the top of `math.js`. Zakariya still needs to agree
+  to it, as `PLAN.md` asks.
+- Added `math.test.js` (19 tests: `node math.test.js`) and checked
+  the page in a browser with sample grades.
 - Choices still to confirm with the user: late penalty is 10% of
   the score, percentages round down on the GPA scale, ungraded
   categories are assumed at the current %, and if the midterm is
   next the same score is assumed on the final.
-- Merged to `main` before Zakariya's review. He can still change
-  the math and results in a follow-up pull request.
+- Merged before Zakariya's review. He can change the math and
+  results side in a follow-up pull request.
