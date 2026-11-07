@@ -17,15 +17,24 @@ We're a team of two. Zakariya and I agreed that I'd add a starter skeleton
 (`index.html`, `style.css`, `script.js`) with a title and empty sections for
 inputs and results, and no calculation logic yet. We build on it from there.
 
-## Proposed split
-This is a proposal; we'll confirm who takes which side.
+## Who owns what
+See `REQUIREMENTS.md` for the user's categories, grading scale and rules.
 
-- **Input side:** the form for categories, weights, scores and the goal grade,
-  plus adding/removing categories and validating input (e.g. weights add up
-  to 100%).
-- **Math and results side:** the calculation of the current grade and the
-  score needed on the next exam, and how the result is shown (including cases
-  like "goal already reached" or "goal not reachable").
+- **Input side: Waleid**
+  - the five categories with their weights (Homework 20%, Quizzes 15%,
+    Midterm 25%, Final Exam 30%, Participation 10%)
+  - individual quiz scores
+  - homework scores, each with a days-late option
+  - midterm and participation scores
+  - a goal GPA picker
+  - choosing which exam is next (midterm or final)
+- **Math and results side: Zakariya**
+  - converting the goal GPA to a percentage using the grading scale
+  - dropping the lowest quiz
+  - applying the late homework penalty
+  - counting blanks as zero
+  - the weighted average
+  - showing the score needed on the next exam
 
 We'll agree early on the shape of the data passed from the input side to the
 math side, so the two halves fit together.
