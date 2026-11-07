@@ -7,20 +7,176 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <h1>Grade Calculator</h1>
+  <header class="topbar">
+    <div>
+      <h1>Grade Calculator</h1>
+      <p class="subtitle">Enter your grades so far to see what you need on your next exam.</p>
+    </div>
+    <div class="topbar-actions">
+      <button type="button" class="btn btn-ghost" id="load-sample">Fill sample grades</button>
+      <button type="button" class="btn btn-ghost" id="clear-all">Clear all</button>
+    </div>
+  </header>
 
-    <section id="inputs">
-      <h2>Your Class</h2>
-      <!-- Input side: categories, weights, scores so far, goal grade -->
+  <main class="layout">
+    <!-- INPUT SIDE (owner: Waleid): form, categories, scores, goal -->
+    <section id="inputs" aria-label="Your class">
+
+      <div class="card">
+        <div class="settings">
+          <label class="field">
+            <span class="field-label">Goal GPA</span>
+            <select id="goal-gpa"></select>
+          </label>
+          <fieldset class="field">
+            <legend class="field-label">Next exam</legend>
+            <div class="segmented">
+              <label><input type="radio" name="next-exam" value="midterm"><span>Midterm</span></label>
+              <label><input type="radio" name="next-exam" value="final" checked><span>Final exam</span></label>
+            </div>
+          </fieldset>
+        </div>
+        <ul class="weights" aria-label="Category weights">
+          <li><span>Homework</span><strong>20%</strong></li>
+          <li><span>Quizzes</span><strong>15%</strong></li>
+          <li><span>Midterm</span><strong>25%</strong></li>
+          <li><span>Final Exam</span><strong>30%</strong></li>
+          <li><span>Participation</span><strong>10%</strong></li>
+        </ul>
+      </div>
+
+      <div class="callout">
+        <strong>How to add work</strong>
+        <ul>
+          <li>Add a row for <em>every</em> homework and quiz that's been assigned and is due, using <b>+ Add</b>.</li>
+          <li>Didn't turn it in? Tick <b>Missing</b>. It counts as <b>0</b>.</li>
+          <li>Work that hasn't been assigned or isn't due yet: <b>don't add it</b>. It isn't counted.</li>
+          <li>A row left blank also counts as 0 and is flagged until you enter a score or mark it Missing.</li>
+        </ul>
+      </div>
+
+      <div class="card category">
+        <div class="category-head">
+          <h2>Homework <span class="chip">20%</span></h2>
+          <p class="hint">Scores in %. Late work (up to 3 days) loses 10% of its score.</p>
+        </div>
+        <div class="item-list" id="homework-list"></div>
+        <p class="empty" id="homework-empty">No homework added. Homework won't count until you add some.</p>
+        <button type="button" class="btn btn-add" data-add="homework">+ Add homework</button>
+      </div>
+
+      <div class="card category">
+        <div class="category-head">
+          <h2>Quizzes <span class="chip">15%</span></h2>
+          <p class="hint">Scores in %. Your lowest quiz is dropped automatically once you have 2 or more.</p>
+        </div>
+        <div class="item-list" id="quizzes-list"></div>
+        <p class="empty" id="quizzes-empty">No quizzes added. Quizzes won't count until you add some.</p>
+        <button type="button" class="btn btn-add" data-add="quizzes">+ Add quiz</button>
+      </div>
+
+      <div class="card-row">
+        <div class="card category">
+          <div class="category-head">
+            <h2>Midterm <span class="chip">25%</span></h2>
+          </div>
+          <div id="midterm-taken">
+            <div class="single">
+              <select id="midterm-status" aria-label="Midterm status">
+                <option value="pending">Not entered yet</option>
+                <option value="graded">Graded</option>
+                <option value="missing">Missing (0)</option>
+              </select>
+              <input type="number" id="midterm-score" class="score" min="0" max="100" step="any" placeholder="Score %" aria-label="Midterm score" hidden>
+            </div>
+            <p class="row-msg" id="midterm-msg"></p>
+          </div>
+          <p class="hint" id="midterm-next" hidden>This is your next exam. The results show the score you need.</p>
+        </div>
+
+        <div class="card category">
+          <div class="category-head">
+            <h2>Participation <span class="chip">10%</span></h2>
+          </div>
+          <div class="single">
+            <select id="participation-status" aria-label="Participation status">
+              <option value="pending">Not graded yet</option>
+              <option value="graded">Graded</option>
+              <option value="missing">Missing (0)</option>
+            </select>
+            <input type="number" id="participation-score" class="score" min="0" max="100" step="any" placeholder="Score %" aria-label="Participation score" hidden>
+          </div>
+          <p class="row-msg" id="participation-msg"></p>
+        </div>
+      </div>
+
+      <div class="card category">
+        <div class="category-head">
+          <h2>Final Exam <span class="chip">30%</span></h2>
+          <p class="hint" id="final-note">This is your next exam. The results show the score you need.</p>
+        </div>
+      </div>
     </section>
 
-    <section id="results">
-      <h2>What You Need</h2>
-      <!-- Math and results side: score needed on the next exam -->
-    </section>
+    <!-- MATH AND RESULTS SIDE (owner: Zakariya): filled in by results.js -->
+    <aside id="results" aria-label="Results" aria-live="polite">
+      <div class="card results-card">
+        <div class="needed" id="needed" data-state="ok">
+          <p class="needed-label" id="needed-label">Needed on your final exam</p>
+          <p class="needed-score" id="needed-score">—</p>
+          <p class="needed-line" id="needed-line"></p>
+          <ul class="needed-notes" id="needed-notes"></ul>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-label">Current grade</span>
+            <span class="stat-value" id="current-percent">—</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Estimated GPA</span>
+            <span class="stat-value" id="current-gpa">—</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Goal GPA</span>
+            <span class="stat-value" id="goal-gpa-out">—</span>
+            <span class="stat-sub" id="goal-percent-out"></span>
+          </div>
+        </div>
+
+        <div class="progress">
+          <div class="progress-head"><span>Progress toward goal</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+          <p class="progress-text" id="progress-text"></p>
+        </div>
+
+        <table class="breakdown">
+          <thead><tr><th>Category</th><th>Weight</th><th>Average</th><th>Details</th></tr></thead>
+          <tbody id="breakdown-body"></tbody>
+        </table>
+        <p class="fineprint">Grading scale: 95%+ = 4.0, each point lower drops 0.1 (93% = 3.8, 85% = 3.0), 65% = 1.0, below 65% = 0.0.</p>
+      </div>
+    </aside>
   </main>
 
+  <template id="item-row">
+    <div class="item">
+      <span class="item-name"></span>
+      <input type="number" class="score" min="0" max="100" step="any" placeholder="Score %">
+      <select class="late" aria-label="Days late">
+        <option value="0">On time</option>
+        <option value="1">1 day late</option>
+        <option value="2">2 days late</option>
+        <option value="3">3 days late</option>
+      </select>
+      <label class="check"><input type="checkbox" class="missing"> Missing</label>
+      <span class="item-counts"></span>
+      <button type="button" class="btn-remove" aria-label="Remove">×</button>
+    </div>
+  </template>
+
+  <script src="math.js"></script>
+  <script src="results.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
